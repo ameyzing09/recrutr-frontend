@@ -1,10 +1,14 @@
-import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from "axios";
-import Cookies from "js-cookie";
+import axios, {
+  AxiosRequestConfig,
+  AxiosRequestHeaders,
+  AxiosResponse,
+} from 'axios';
+import Cookies from 'js-cookie';
 
-const API_URL = "http://localhost:8000/api/";
+const API_URL = 'http://localhost:8080/api/';
 
 interface AdaptAxiosRequestConfig extends AxiosRequestConfig {
-    headers: AxiosRequestHeaders;
+  headers: AxiosRequestHeaders;
 }
 
 const axiosInstance = axios.create({
@@ -15,7 +19,7 @@ axiosInstance.interceptors.request.use(
   /* See issue: https://github.com/axios/axios/issues/5573 
   Fix: https://github.com/axios/axios/issues/5573#issuecomment-1489596178 */
   (config: AdaptAxiosRequestConfig) => {
-    const token = Cookies.get("token");
+    const token = Cookies.get('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

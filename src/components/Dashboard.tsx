@@ -1,4 +1,4 @@
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from '../hooks/useAuth';
 
 function Dashboard() {
   const { token } = useAuth();
@@ -6,9 +6,7 @@ function Dashboard() {
   if (!token) {
     return null;
   }
-  return (
-    <div>Dashboard</div>
-  )
+  return <div>Dashboard</div>;
 }
 
-export default Dashboard
+export default Dashboard;
