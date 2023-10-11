@@ -9,7 +9,7 @@ export const useAuth = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (!token) {
+    if (!token && location.pathname !== '/login') {
       navigate('/login', { state: { from: location } });
     }
   }, [token, navigate, location]);

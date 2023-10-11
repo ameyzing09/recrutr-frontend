@@ -22,11 +22,12 @@ export const login =
         username,
         password,
       });
-      console.log(response.data.data);
       const { token } = response.data.data;
       dispatch(loginSuccess(token));
+      showToast('Login successful!', 'success');
       Cookies.set('token', token, { expires: 1 });
-    } catch (error: unknown) {
+      return true;
+    } catch (error: any) {
       let errorMessage = 'An error occurred, please try again!';
       if (error.code === 'ERR_NETWORK') {
         errorMessage =
@@ -36,6 +37,7 @@ export const login =
       }
       dispatch(loginFailed(errorMessage));
       showToast(errorMessage, 'error');
+      return false;
     } finally {
       dispatch(resetState());
     }
