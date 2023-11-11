@@ -1,14 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface AuthState {
-  token: string | null;
-  status: 'idle' | 'loading' | 'failed';
+// instead of token we can use currentUser to store it's information and token into the httpOnly cookie form backend
+export interface AuthState {
+  currentUser: string | null; //for now as string but we can use interface for it
+  status: 'loading' | 'signedIn' | 'notSignedIn';
   error?: string | null;
 }
 
 const initialState: AuthState = {
-  token: null,
-  status: 'idle',
+  currentUser: null,
+  status: 'notSignedIn',
   error: null,
 };
 
@@ -20,13 +21,13 @@ export const authSlice = createSlice({
       state.status = 'loading';
     },
     loginSuccess: (state, action: PayloadAction<string>) => {
-      state.status = 'idle';
-      state.token = action.payload;
+      state.status = 'signedIn';
+      state.currentUser = action.payload;
     },
     loginFailed: (state, action: PayloadAction<string>) => {
-      state.status = 'failed';
+      state.status = 'notSignedIn';
       state.error = action.payload;
-      state.token = null;
+      state.currentUser = null;
     },
     resetState: () => initialState,
   },

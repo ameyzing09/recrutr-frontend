@@ -4,16 +4,11 @@ import {
   loginFailed,
   loginStart,
   loginSuccess,
-  resetState,
 } from '../features/auth/authSlice';
 import { AppThunk } from '../store';
-import Cookies from 'js-cookie';
-// import { useState } from 'react';
-
-type ShowToastType = (message: string, type: 'success' | 'error') => void;
 
 export const login =
-  (username: string, password: string, showToast: ShowToastType): AppThunk =>
+  (username: string, password: string): AppThunk =>
   async (dispatch) => {
     // const [loading, setLoading] = useState(false);
     try {
@@ -22,11 +17,8 @@ export const login =
         username,
         password,
       });
-      const { token } = response.data.data;
-      dispatch(loginSuccess(token));
-      showToast('Login successful!', 'success');
-      Cookies.set('token', token, { expires: 1 });
-      return true;
+      const { user: currentUser } = response.data.data;
+      dispatch(loginSuccess(currentUser));
     } catch (error: any) {
       let errorMessage = 'An error occurred, please try again!';
       if (error.code === 'ERR_NETWORK') {
@@ -36,9 +28,5 @@ export const login =
         errorMessage = error.response.data.error.message;
       }
       dispatch(loginFailed(errorMessage));
-      showToast(errorMessage, 'error');
-      return false;
-    } finally {
-      dispatch(resetState());
     }
   };

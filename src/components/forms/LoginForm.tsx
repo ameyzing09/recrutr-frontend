@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { login } from '../../services/authService';
-import type { AppDispatch } from '../../store';
+import type { AppDispatch, RootState } from '../../store';
 
 import useToast from '../../hooks/useToast';
 
 import InputField from '.././common/InputField';
 import Toast from '../common/Toast';
+import { useNavigate } from 'react-router-dom';
+import { resetState } from '../../features/auth/authSlice';
 
 interface LoginCreds {
   username: string;
@@ -25,7 +27,16 @@ export const LoginForm: React.FC = () => {
   });
 
   const [isShaking, setIsShaking] = useState(false);
+
+  const navigate = useNavigate();
+
   const { toast, showToast } = useToast();
+  const loginError = useSelector((state: RootState) => state.auth.error);
+  const isUserLogged = useSelector(
+    (state: RootState) => state.auth.status === 'signedIn'
+  );
+
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     let shakeTimeout: number | null = null;
@@ -37,7 +48,15 @@ export const LoginForm: React.FC = () => {
     };
   }, [isShaking]);
 
-  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    if (loginError) {
+      showToast(loginError, 'error');
+      dispatch(resetState());
+    } else if (isUserLogged) {
+      showToast('Login Successful', 'success');
+      navigate('/');
+    }
+  }, [loginError, isUserLogged, showToast, navigate, dispatch]);
 
   const handleInputChange =
     (field: keyof LoginCreds) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +76,7 @@ export const LoginForm: React.FC = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-
+    // checking if the form is valid or empty
     const formErrors = {
       username: !loginCreds.username.trim() ? 'Username is required' : '',
       password: !loginCreds.password.trim() ? 'Password is required' : '',
@@ -67,7 +86,7 @@ export const LoginForm: React.FC = () => {
       setIsShaking(true);
       return;
     }
-    dispatch(login(loginCreds.username, loginCreds.password, showToast));
+    dispatch(login(loginCreds.username, loginCreds.password));
   };
 
   return (
