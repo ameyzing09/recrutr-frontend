@@ -53,7 +53,6 @@ export const LoginForm: React.FC = () => {
       showToast(loginError, 'error');
       dispatch(resetState());
     } else if (isUserLogged) {
-      showToast('Login Successful', 'success');
       navigate('/');
     }
   }, [loginError, isUserLogged, showToast, navigate, dispatch]);
