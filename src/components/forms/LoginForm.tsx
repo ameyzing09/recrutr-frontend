@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-import { login } from '../../services/authService';
 import type { AppDispatch, RootState } from '../../store';
-
-import useToast from '../../hooks/useToast';
 
 import InputField from '.././common/InputField';
 import Toast from '../common/Toast';
-import { useNavigate } from 'react-router-dom';
+
+import { login } from '../../services/authService';
 import { resetState } from '../../features/auth/authSlice';
 
+import useToast from '../../hooks/useToast';
 interface LoginCreds {
   username: string;
   password: string;
