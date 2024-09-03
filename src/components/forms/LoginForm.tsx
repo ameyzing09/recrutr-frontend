@@ -56,7 +56,7 @@ export const LoginForm: React.FC = () => {
       navigate('/');
     }
   }, [loginError, isUserLogged, showToast, navigate, dispatch]);
-
+  
   const handleInputChange =
     (field: keyof LoginCreds) => (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;
